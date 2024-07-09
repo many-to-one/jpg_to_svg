@@ -1,8 +1,9 @@
 # import cv2
 # import numpy as np
 # import svgwrite
+# import os
 
-# def convert_to_vector(input_image_path, output_image_path, scale_factor=1.0, epsilon_factor=0.01, canny_threshold1=100, canny_threshold2=200, blur_kernel_size=(5, 5), contour_mode=cv2.RETR_EXTERNAL, contour_method=cv2.CHAIN_APPROX_NONE, stroke_width=1, fill_color='black'):
+# def convert_to_vector(input_image_path, output_image_path, scale_factor, epsilon_factor, canny_threshold1, canny_threshold2, blur_kernel_size, contour_mode, contour_method, stroke_width, fill_color, use_bilateral_filter):
 #     # Read the input image
 #     image = cv2.imread(input_image_path)
 
@@ -10,7 +11,7 @@
 #         print(f"Error: Could not load image {input_image_path}")
 #         return
     
-#     print('********* epsilon_factor *********', epsilon_factor)
+#     # print('********* epsilon_factor *********', epsilon_factor)
 
 #     # Get image dimensions
 #     height, width, _ = image.shape
@@ -22,7 +23,12 @@
 #     gray_image = cv2.cvtColor(scaled_image, cv2.COLOR_BGR2GRAY)
 
 #     # Apply Gaussian blur to smooth the image
-#     blurred_image = cv2.GaussianBlur(gray_image, blur_kernel_size, 0)
+#     if use_bilateral_filter:
+#         print('********* use_bilateral_filter *********')
+#         blurred_image = cv2.bilateralFilter(gray_image, d=9, sigmaColor=75, sigmaSpace=75)
+#     else:
+#         print('********* GaussianBlur *********')
+#         blurred_image = cv2.GaussianBlur(gray_image, blur_kernel_size, 0)
 
 #     # Apply Canny edge detection to find outlines with adjustable thresholds
 #     edges = cv2.Canny(blurred_image, canny_threshold1, canny_threshold2)
@@ -51,27 +57,30 @@
 #     dwg.save()
 
 # # Sample input and output file paths
-# input_image_path = r'D:\ALEX\2023\08\jpg\vectors\1.JPG'
-# output_image_path = r'D:\ALEX\2023\08\jpg\vectors\results\1.svg'
+# # input_image_path = r'D:\ALEX\2023\08\jpg\vectors\2.JPG'
+# # output_image_path = r'D:\ALEX\2023\08\jpg\vectors\results\1.svg'
+# script_dir = os.path.dirname(os.path.abspath(__file__))
+# input_image_relative_path = 'ws1.jpg'
+# output_image_relative_path = '1.svg'
+# input_image_path = os.path.join(script_dir, input_image_relative_path)
+# output_image_path = os.path.join(script_dir, output_image_relative_path)
 
 # # Call the function to convert the image to vectors with adjustable parameters
-# convert_to_vector(input_image_path, output_image_path, scale_factor=2.0, epsilon_factor=0.00001, canny_threshold1=50, canny_threshold2=150, blur_kernel_size=(3, 3), contour_mode=cv2.RETR_TREE, contour_method=cv2.CHAIN_APPROX_NONE, stroke_width=1.5, fill_color='black')
-
+# convert_to_vector(input_image_path, output_image_path, scale_factor=6.0, epsilon_factor=0.000001, canny_threshold1=50, canny_threshold2=150, blur_kernel_size=(5, 5), contour_mode=cv2.RETR_TREE, contour_method=cv2.CHAIN_APPROX_NONE, stroke_width=1, fill_color='black', use_bilateral_filter=False)
 
 
 import cv2
 import numpy as np
 import svgwrite
+import os
 
-def convert_to_vector(input_image_path, output_image_path, scale_factor=1.0, epsilon_factor=0.01, canny_threshold1=100, canny_threshold2=200, blur_kernel_size=(5, 5), contour_mode=cv2.RETR_EXTERNAL, contour_method=cv2.CHAIN_APPROX_NONE, stroke_width=1, fill_color='black', use_bilateral_filter=False):
+def convert_to_vector(input_image_path, output_image_path, scale_factor, epsilon_factor, canny_threshold1, canny_threshold2, blur_kernel_size, contour_mode, contour_method, stroke_width, fill_color, use_bilateral_filter):
     # Read the input image
     image = cv2.imread(input_image_path)
 
     if image is None:
         print(f"Error: Could not load image {input_image_path}")
         return
-    
-    # print('********* epsilon_factor *********', epsilon_factor)
 
     # Get image dimensions
     height, width, _ = image.shape
@@ -115,8 +124,11 @@ def convert_to_vector(input_image_path, output_image_path, scale_factor=1.0, eps
     dwg.save()
 
 # Sample input and output file paths
-input_image_path = r'D:\ALEX\2023\08\jpg\vectors\2.JPG'
-output_image_path = r'D:\ALEX\2023\08\jpg\vectors\results\1.svg'
+script_dir = os.path.dirname(os.path.abspath(__file__))
+input_image_relative_path = '1.jpg'  # Change this to your image file name
+output_image_relative_path = '1.svg'   # Change this to your desired output file name
+input_image_path = os.path.join(script_dir, input_image_relative_path)
+output_image_path = os.path.join(script_dir, output_image_relative_path)
 
 # Call the function to convert the image to vectors with adjustable parameters
-convert_to_vector(input_image_path, output_image_path, scale_factor=2.0, epsilon_factor=0.00001, canny_threshold1=50, canny_threshold2=150, blur_kernel_size=(3, 3), contour_mode=cv2.RETR_TREE, contour_method=cv2.CHAIN_APPROX_NONE, stroke_width=1.5, fill_color='black', use_bilateral_filter=True)
+convert_to_vector(input_image_path, output_image_path, scale_factor=6.0, epsilon_factor=0.000001, canny_threshold1=50, canny_threshold2=150, blur_kernel_size=(5, 5), contour_mode=cv2.RETR_TREE, contour_method=cv2.CHAIN_APPROX_NONE, stroke_width=3, fill_color='black', use_bilateral_filter=False)
